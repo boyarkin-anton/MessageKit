@@ -51,6 +51,9 @@ open class MessageCollectionViewCell: UICollectionViewCell, CollectionViewReusab
         return label
     }()
 
+    // Should only add customized subviews - don't change accessoryView itself.
+    open var accessoryView: UIView = UIView()
+    
     open weak var delegate: MessageCellDelegate?
 
     public override init(frame: CGRect) {
@@ -64,6 +67,7 @@ open class MessageCollectionViewCell: UICollectionViewCell, CollectionViewReusab
     }
 
     open func setupSubviews() {
+        contentView.addSubview(accessoryView)
         contentView.addSubview(messageContainerView)
         contentView.addSubview(avatarView)
         contentView.addSubview(cellTopLabel)
@@ -87,6 +91,7 @@ open class MessageCollectionViewCell: UICollectionViewCell, CollectionViewReusab
             cellTopLabel.frame = attributes.topLabelFrame
             cellBottomLabel.frame = attributes.bottomLabelFrame
             messageContainerView.frame = attributes.messageContainerFrame
+            layoutAccessoryView(with: attributes)
         }
     }
 
@@ -104,6 +109,8 @@ open class MessageCollectionViewCell: UICollectionViewCell, CollectionViewReusab
         let messageStyle = displayDelegate.messageStyle(for: message, at: indexPath, in: messagesCollectionView)
         
         displayDelegate.configureAvatarView(avatarView, for: message, at: indexPath, in: messagesCollectionView)
+        
+        displayDelegate.configureAccessoryView(accessoryView, for: message, at: indexPath, in: messagesCollectionView)
 
         messageContainerView.backgroundColor = messageColor
         messageContainerView.style = messageStyle
@@ -143,5 +150,15 @@ open class MessageCollectionViewCell: UICollectionViewCell, CollectionViewReusab
     /// Handle `ContentView`'s tap gesture, return false when `ContentView` doesn't needs to handle gesture
     open func cellContentView(canHandle touchPoint: CGPoint) -> Bool {
         return false
+    }
+    
+    /// Positions the cell's accessory view.
+    /// - attributes: The `MessagesCollectionViewLayoutAttributes` for the cell.
+    func layoutAccessoryView(with attributes: MessagesCollectionViewLayoutAttributes) {
+        var y = (bounds.height - attributes.accessoryViewSize.height) / 2
+        y -= attributes.accessoryViewPadding.vertical + attributes.accessoryViewPadding.top
+        let x = messageContainerView.frame.minX - attributes.accessoryViewPadding.right - attributes.accessoryViewSize.width
+        
+        accessoryView.frame = CGRect(origin: CGPoint(x: x, y: y), size: attributes.accessoryViewSize)
     }
 }

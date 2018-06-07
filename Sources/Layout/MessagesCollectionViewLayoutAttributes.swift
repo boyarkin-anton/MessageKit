@@ -37,6 +37,9 @@ final class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttrib
 
     var topLabelFrame: CGRect = .zero
     var bottomLabelFrame: CGRect = .zero
+    
+    public var accessoryViewSize: CGSize = .zero
+    public var accessoryViewPadding: UIEdgeInsets = .zero
 
     // MARK: - Methods
 
@@ -49,6 +52,8 @@ final class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttrib
         copy.messageLabelInsets = messageLabelInsets
         copy.topLabelFrame = topLabelFrame
         copy.bottomLabelFrame = bottomLabelFrame
+        copy.accessoryViewSize = accessoryViewSize
+        copy.accessoryViewPadding = accessoryViewPadding
         return copy
         // swiftlint:enable force_cast
     }
